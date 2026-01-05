@@ -1,0 +1,8 @@
+# CODEOWNERS
+# このファイルは、リポジトリの各部分に対するコードオーナーを定義します。
+# コードオーナーは、該当するファイルへの変更に対して自動的にレビュー依頼を受けます。
+#
+# 詳細: https://docs.github.com/ja/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# デフォルトオーナー（すべてのファイルに適用）
+* @KH37
