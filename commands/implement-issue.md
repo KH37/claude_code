@@ -1,6 +1,6 @@
 ---
 description: GitHub Issueを受け取って実装を行う
-allowed-tools: Bash(gh issue view:*), Bash(gh issue comment:*), Bash(git:*), Read, Write, Edit, Glob, Grep, Task
+allowed-tools: Bash(gh issue view:*), Bash(gh issue comment:*), Bash(git:*), Read, Write, Edit, Glob, Grep, Task, EnterPlanMode, ExitPlanMode, TodoWrite
 ---
 
 # Implement Issue Command
@@ -45,28 +45,58 @@ Issue に関連するコードを調査：
 - 変更が必要なファイルを特定
 - 影響範囲を把握
 
-### 3. 実装計画の作成
+### 3. Plan Mode に入る
 
-TodoWriteツールを使用して実装計画を作成し、ユーザーに提示：
-- 実装ステップを細分化
-- 各ステップで変更するファイルを明示
-- 予想される課題やリスクがあれば記載
+`EnterPlanMode` ツールを使用して Claude Code の plan mode に入る。
+plan mode では以下を行う：
+- コードベースをさらに詳しく調査
+- 実装アプローチの設計
+- 計画ファイル（`.plan.md`）への実装計画の記述
 
-### 4. ユーザー確認
+### 4. 実装計画の作成（Plan Mode 内）
 
-実装計画についてユーザーに確認を求める：
-- 計画に問題がないか
-- 追加の要件や制約がないか
-- 優先すべき点があるか
+plan mode 内で `.plan.md` ファイルに詳細な実装計画を記述：
 
-### 5. 実装
+```markdown
+## 概要
+- Issue の要約
+- 解決するべき課題
+
+## 実装アプローチ
+- 選択したアプローチとその理由
+- 代替案があれば記載
+
+## 変更するファイル
+- 各ファイルの変更内容を具体的に
+
+## 実装ステップ
+1. ステップ1: 〇〇
+2. ステップ2: 〇〇
+...
+
+## テスト計画
+- 追加・修正するテスト
+
+## リスク・懸念事項
+- 予想される課題や注意点
+```
+
+### 5. ユーザー承認（ExitPlanMode）
+
+`ExitPlanMode` ツールを使用してユーザーに計画の承認を求める：
+- 実装に必要な Bash 権限があれば `allowedPrompts` で指定
+- ユーザーが計画を確認し、承認または修正を指示
+- 承認されるまで実装には移らない
+
+### 6. 実装
 
 承認された計画に基づいて実装を進める：
-- 各ステップごとにTodoを更新
+- TodoWrite で各ステップを管理
+- 計画に沿って順番に実装
 - 必要に応じてテストも作成
-- lint/formatを適用
+- lint/format を適用
 
-### 6. 完了報告
+### 7. 完了報告
 
 実装完了後：
 - 変更内容のサマリーを報告
@@ -87,7 +117,4 @@ TodoWriteツールを使用して実装計画を作成し、ユーザーに提�
 
 ```bash
 gh issue comment $ARGUMENTS --body "実装を開始しました。
-
----
-_by Claude Code_"
 ```
